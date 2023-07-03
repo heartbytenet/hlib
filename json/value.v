@@ -4,13 +4,7 @@ import hlib.optional
 
 struct Null {}
 
-type Value
-	= []Value
-	| Null
-	| bool 
-	| f64 
-	| map[string]Value
-	| string
+type Value = Null | []Value | bool | f64 | map[string]Value | string
 
 pub fn (v Value) array() optional.Optional[[]Value] {
 	return if v is []Value { optional.some(v) } else { optional.empty[[]Value]() }
@@ -36,7 +30,17 @@ pub fn (v Value) string() optional.Optional[string] {
 	return if v is string { optional.some(v) } else { optional.empty[string]() }
 }
 
-pub fn (m map[string]Value) at(key string) optional.Optional[Value] {
-	value := m[key] or { return optional.empty[Value]() }
+pub fn (v map[string]Value) at(key string) optional.Optional[Value] {
+	value := v[key] or { return optional.empty[Value]() }
 	return optional.some(value)
+}
+
+pub fn (v []Value) at(i int) optional.Optional[Value] {
+	for index, value in v {
+		if index == i {
+			return optional.some(value)
+		}
+	}
+
+	return optional.empty[Value]()
 }
