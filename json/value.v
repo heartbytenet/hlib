@@ -1,6 +1,7 @@
 module json
 
 import hlib.optional
+import optional
 
 struct Null {}
 
@@ -36,11 +37,6 @@ pub fn (v map[string]Value) at(key string) optional.Optional[Value] {
 }
 
 pub fn (v []Value) at(i int) optional.Optional[Value] {
-	for index, value in v {
-		if index == i {
-			return optional.some(value)
-		}
-	}
-
-	return optional.empty[Value]()
+	value := v[i] or { return optional.empty[Value]() }
+	return optional.some[Value](value)
 }
