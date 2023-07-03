@@ -1,7 +1,6 @@
 module json
 
 import hlib.optional
-import optional
 
 struct Null {}
 
