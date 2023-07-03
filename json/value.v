@@ -35,3 +35,8 @@ pub fn (v Value) f64() optional.Optional[f64] {
 pub fn (v Value) string() optional.Optional[string] {
 	return if v is string { optional.some(v) } else { optional.empty[string]() }
 }
+
+pub fn (m map[string]Value) at(key string) optional.Optional[Value] {
+	value := m[key] or { return optional.empty[Value]() }
+	return optional.some(value)
+}
