@@ -36,6 +36,7 @@ fn (mut scanner Scanner) parse() !Value {
 			mut array := []Value{}
 			peek := scanner.peek()!
 			if peek is RightBracket {
+				scanner.skip()
 				return array
 			}
 			array << scanner.parse()!
