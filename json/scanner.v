@@ -18,6 +18,10 @@ fn (mut scanner Scanner) next() !Token {
 	return token
 }
 
+fn (mut scanner Scanner) skip() {
+	scanner.pos++
+}
+
 fn (mut scanner Scanner) peek() !Token {
 	return scanner.tokens[scanner.pos] or { 
 		return error("unexpected end of input") 
