@@ -2,9 +2,9 @@ module json
 
 import hlib.optional
 
-struct Null {}
+pub struct Null {}
 
-type Value = Null | []Value | bool | f64 | map[string]Value | string
+pub type Value = Null | []Value | bool | f64 | map[string]Value | string
 
 pub fn (v Value) array() optional.Optional[[]Value] {
 	return if v is []Value { optional.some(v) } else { optional.empty[[]Value]() }
