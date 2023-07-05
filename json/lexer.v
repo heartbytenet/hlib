@@ -88,6 +88,9 @@ fn lex(source string) ![]Token {
 				pos++
 				for source[pos].is_digit() { 
 					pos++ 
+					if pos >= source.len {
+						unsafe { goto finish }
+					}
 				}
 			} else {
 				return error("unexpected character `${rune(source[pos])}`")
@@ -95,30 +98,41 @@ fn lex(source string) ![]Token {
 			// optional decimal part
 			if source[pos] == `.` {
 				pos++
+				// don't need to finish because there must be digits after `.`
 				if source[pos].is_digit() {
 					pos++
+					if pos >= source.len {
+						unsafe { goto finish }
+					}
 				} else {
 					return error("invalid character in decimal part of number literal `${rune(source[pos])}`")
 				}
-				for source[pos].is_digit() { 
+				for source[pos]!.is_digit() { 
 					pos++ 
+					if pos >= source.len {
+						unsafe { goto finish }
+					}
 				}
 			}
 			// optional exponent part
 			if source[pos] in [`e`, `E`] {
 				pos++
-				if source[pos] in [`-`, `+`] {
+				if source[pos]! in [`-`, `+`] {
 					pos++
 				}
-				if source[pos].is_digit() {
+				if source[pos]!.is_digit() {
 					pos++
 				} else {
 					return error("invalid character in exponent part of number literal `${rune(source[pos])}`")
 				}
-				for source[pos].is_digit() {
+				for source[pos]!.is_digit() {
 					pos++
+					if pos >= source.len {
+						unsafe { goto finish }
+					}
 				}
 			}
+			finish:
 			value := strconv.atof64(source[start..pos])!
 			tokens << NumberLit { value: value }
 		}
